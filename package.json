@@ -1,0 +1,11 @@
+{
+  "name": "pi-setup",
+  "version": "1.0.0",
+  "private": true,
+  "keywords": ["pi-package"],
+  "pi": {
+    "skills": ["./skills"],
+    "themes": ["./themes"],
+    "prompts": ["./prompts"]
+  }
+}
