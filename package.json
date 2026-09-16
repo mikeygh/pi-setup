@@ -4,8 +4,7 @@
   "private": true,
   "keywords": ["pi-package"],
   "pi": {
-    "skills": ["./skills"],
-    "themes": ["./themes"],
-    "prompts": ["./prompts"]
+    "prompts": ["./prompts"],
+    "themes": ["./themes"]
   }
 }

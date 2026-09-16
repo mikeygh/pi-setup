@@ -1,6 +1,7 @@
 # pi-setup
 
-Snapshot/backup of my personal [pi](https://pi.dev) coding agent configuration, tracked as a [pi package](https://pi.dev/packages).
+Snapshot/backup of my personal [pi](https://pi.dev) coding agent configuration, plus the
+**provenance** I need to reproduce that setup on another machine.
 
 ## What's tracked
 
@@ -9,19 +10,20 @@ Snapshot/backup of my personal [pi](https://pi.dev) coding agent configuration, 
 - `AGENTS.md` — global agent instructions.
 - `APPEND_SYSTEM.md` — system prompt appendix (language preference for crypto/computation).
 - `models-store.json` — model catalog (Big Pickle et al.).
-- `extensions/`
-  - `quotas.json` — pi-quotas runtime config.
-  - `vendor/@latentminds-pi-quotas/` — vendored source of the pi-quotas extension.
-  - `vendor/pi-rate-limit/` — vendored source of the pi-rate-limit extension.
-- `skills/`, `themes/`, `prompts/` — reserved package dirs (skills master lives at
-  `~/.agents/skills`, currently not vendored here).
+- `skills-lock.json` — **skill provenance manifest** (copied from `~/.agents/.skill-lock.json`).
+  Records the source repo + path of every installed skill so they can be reinstalled.
+- `extensions/quotas.json` — pi-quotas runtime config (extension itself installs via `packages`).
 
-## Intentional exclusions (not committed)
+## What is NOT vendored, and why
 
-- `npm/` — installed deps for the `packages` list; recreated by `pi install`.
-- `auth.json` — API keys/credentials.
-- `trust.json`, `sessions/`, `bin/`, `models` scratch — machine-local state.
-- `pi-opencode-bridge` — provider extension (can be reinstalled via `packages`).
+Skills and public packages are **reproducible from source**, so only their provenance is stored —
+not their bytes.
+
+- **Skills** — all 65 come from 5 public repos (mattpocock/skills, obra/superpowers,
+  vercel-labs/agent-skills, vercel-labs/skills, xixu-me/skills), recorded in `skills-lock.json`.
+- **Extensions** — `pi-quotas`, `pi-rate-limit`, `pi-opencode-bridge` are public npm packages,
+  referenced by the `packages` array in `settings.json`.
+- **Not committed** (local secrets/state): `auth.json`, `trust.json`, `sessions/`, `npm/`, `bin/`.
 
 ## Sync from live setup
 
@@ -30,14 +32,23 @@ cp ~/.pi/agent/settings.json settings.json
 cp ~/.pi/agent/AGENTS.md AGENTS.md
 cp ~/.pi/agent/APPEND_SYSTEM.md APPEND_SYSTEM.md
 cp ~/.pi/agent/models-store.json models-store.json
+cp ~/.agents/.skill-lock.json skills-lock.json
 cp ~/.pi/agent/extensions/quotas.json extensions/quotas.json
 ```
 
 ## Restore on a new machine
 
 ```bash
-pi install /path/to/pi-setup
-# `packages` in settings installs the npm extensions automatically.
+# 1. Extensions — install via the npm packages listed in settings.json:
+pi install npm:@latentminds/pi-quotas
+pi install npm:pi-rate-limit
+pi install npm:pi-opencode-bridge
+
+# 2. Skills — restore from the provenance manifest:
+cp skills-lock.json ~/.agents/.skill-lock.json
+# then run the skills CLI restore, e.g.:
+bunx skills experimental_install
 ```
 
-See the [pi packages docs](https://pi.dev/docs) for manifest details.
+The 5 public skill repos behind `skills-lock.json`:
+mattpocock/skills · obra/superpowers · vercel-labs/agent-skills · vercel-labs/skills · xixu-me/skills
