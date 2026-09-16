@@ -13,6 +13,7 @@ Snapshot/backup of my personal [pi](https://pi.dev) coding agent configuration, 
 - `skills-lock.json` — **skill provenance manifest** (copied from `~/.agents/.skill-lock.json`).
   Records the source repo + path of every installed skill so they can be reinstalled.
 - `extensions/quotas.json` — pi-quotas runtime config (extension itself installs via `packages`).
+- `sync.sh` — one-command refresh of the above from `~/.pi` + `~/.agents`.
 
 ## What is NOT vendored, and why
 
@@ -25,28 +26,26 @@ not their bytes.
   referenced by the `packages` array in `settings.json`.
 - **Not committed** (local secrets/state): `auth.json`, `trust.json`, `sessions/`, `npm/`, `bin/`.
 
-## Sync from live setup
+## Refresh from the live setup
 
 ```bash
-cp ~/.pi/agent/settings.json settings.json
-cp ~/.pi/agent/AGENTS.md AGENTS.md
-cp ~/.pi/agent/APPEND_SYSTEM.md APPEND_SYSTEM.md
-cp ~/.pi/agent/models-store.json models-store.json
-cp ~/.agents/.skill-lock.json skills-lock.json
-cp ~/.pi/agent/extensions/quotas.json extensions/quotas.json
+./sync.sh          # copy files, show what changed
+./sync.sh -c       # copy + commit
+./sync.sh -p       # copy + commit + push to origin
 ```
 
 ## Restore on a new machine
 
+> Note: `pi install` on this repo registers the package but ships no loadable resources
+> (themes/prompts are empty and skills/extensions are provenance-only). Restoring your actual
+> setup uses the reference copies directly:
+
 ```bash
-# 1. Extensions — install via the npm packages listed in settings.json:
-pi install npm:@latentminds/pi-quotas
-pi install npm:pi-rate-limit
-pi install npm:pi-opencode-bridge
+# 1. Config + extensions — pi auto-installs the `packages` list on next start:
+cp settings.json ~/.pi/agent/settings.json
 
 # 2. Skills — restore from the provenance manifest:
 cp skills-lock.json ~/.agents/.skill-lock.json
-# then run the skills CLI restore, e.g.:
 bunx skills experimental_install
 ```
 
