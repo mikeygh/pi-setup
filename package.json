@@ -4,6 +4,7 @@
   "private": true,
   "keywords": ["pi-package"],
   "pi": {
+    "extensions": ["./extensions/setup/index.ts"],
     "prompts": ["./prompts"],
     "themes": ["./themes"]
   }

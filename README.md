@@ -14,6 +14,8 @@ Snapshot/backup of my personal [pi](https://pi.dev) coding agent configuration, 
   Records the source repo + path of every installed skill so they can be reinstalled.
 - `extensions/quotas.json` — pi-quotas runtime config (extension itself installs via `packages`).
 - `sync.sh` — one-command refresh of the above from `~/.pi` + `~/.agents`.
+- `extensions/setup/index.ts` — registers a `/pi-setup` command so the package can re-hydrate
+  a machine from its bundled provenance files.
 
 ## What is NOT vendored, and why
 
@@ -34,18 +36,37 @@ not their bytes.
 ./sync.sh -p       # copy + commit + push to origin
 ```
 
-## Restore on a new machine
+## Restore on a new machine (easy, via `pi install`)
 
-> Note: `pi install` on this repo registers the package but ships no loadable resources
-> (themes/prompts are empty and skills/extensions are provenance-only). Restoring your actual
-> setup uses the reference copies directly:
+Because this is a pi package with a bundled setup *extension*, installing it gives you a
+`/pi-setup` command that re-hydrates the machine from the provenance files (keeping provenance,
+not vendoring public skill/package bytes):
 
 ```bash
-# 1. Config + extensions — pi auto-installs the `packages` list on next start:
-cp settings.json ~/.pi/agent/settings.json
+# 1. Install the package (Git source keeps the bundled configs accessible to the extension):
+pi install git:github.com/mikeygh/pi-setup
 
-# 2. Skills — restore from the provenance manifest:
+# 2. Reload so the extension registers, then run its setup command:
+/reload
+/pi-setup            # copies settings.json, models-store.json, quotas.json, skills-lock.json
+                     # into ~/.pi and ~/.agents (originals backed up to *.bak-<timestamp>)
+
+# 3. Restore skills from the lockfile:
+bunx skills experimental_install
+
+# 4. Restart pi — it auto-installs the extensions listed in settings.json `packages`.
+```
+
+`/pi-setup --dry-run` previews changes without writing; `/pi-setup --yes` skips the confirm. It is
+**not** auto-run on load, so it can never change your setup without you asking.
+
+### Manual fallback (no `pi install`)
+
+```bash
+cp settings.json ~/.pi/agent/settings.json
 cp skills-lock.json ~/.agents/.skill-lock.json
+cp models-store.json ~/.pi/agent/models-store.json
+mkdir -p ~/.pi/agent/extensions && cp extensions/quotas.json ~/.pi/agent/extensions/quotas.json
 bunx skills experimental_install
 ```
 
