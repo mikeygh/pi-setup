@@ -1,7 +1,46 @@
 {
-  "lastChangelogVersion": "0.79.6",
+  "lastChangelogVersion": "0.85.1",
   "defaultProvider": "opencode",
   "defaultModel": "big-pickle",
-  "defaultThinkingLevel": "medium",
-  "theme": "dark"
+  "defaultThinkingLevel": "high",
+  "theme": "dark",
+  "enabledModels": [
+    "opencode/laguna-s-2.1-free",
+    "opencode/ling-3.0-flash-free",
+    "opencode/nemotron-3-ultra-free",
+    "opencode/north-mini-code-free",
+    "opencode/ling-3.0-tiny-free",
+    "opencode/nemotron-3.5-lightning-free",
+    "opencode/big-pickle",
+    "opencode/deepseek-v4-flash-free",
+    "opencode/longcat-2.0-free",
+    "opencode/mimo-v2.5-free",
+    "opencode/hy3-free"
+  ],
+  "packages": [
+    "npm:@latentminds/pi-quotas",
+    "npm:pi-rate-limit",
+    "npm:pi-opencode-bridge"
+  ],
+  "codepi": {
+    "modes": {
+      "ask": {
+        "allowedTools": [
+          "read",
+          "head",
+          "grep",
+          "find",
+          "ls",
+          "get_diagnostics",
+          "web_search",
+          "fetch_content",
+          "get_editor_context",
+          "get_git_diff",
+          "codepi-task-run",
+          "codepi-task-list"
+        ]
+      }
+    }
+  },
+  "hideThinkingBlock": false
 }

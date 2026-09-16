@@ -1,0 +1,52 @@
+{
+  "name": "pi-rate-limit",
+  "version": "1.0.0",
+  "description": "Pi-native runtime resilience toolkit — rate limiting, retry/backoff planning, and circuit-breaker state tracking for pi.dev extensions",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "pi-package",
+    "pi",
+    "rate-limit",
+    "retry",
+    "circuit-breaker",
+    "resilience",
+    "backoff",
+    "throttle"
+  ],
+  "author": "realvendex",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZachDreamZ/pi-rate-limit.git"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.34.0"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "typebox": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.0"
+  },
+  "pi": {
+    "extensions": [
+      "./dist/index.js"
+    ]
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
+}

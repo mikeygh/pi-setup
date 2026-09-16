@@ -1,2 +1,11 @@
 node_modules/
 .DS_Store
+
+# local secrets / state — never commit
+auth.json
+trust.json
+sessions/
+bin/
+
+# npm-installed packages (recreatable via `packages` in settings.json)
+npm/
